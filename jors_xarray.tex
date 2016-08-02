@@ -2,21 +2,21 @@
 
 \documentclass{jors}
 
-%  packages used by the xarray paper
+%  packages used by the Xarray paper
 \usepackage{natbib}
 \usepackage{graphicx}
 \usepackage{url}
 \graphicspath{ {figures/} }
 \setlength{\parskip}{1em}
-% 5024  sudo port install texlive-bibtex-extra
-% 5031  sudo port install texlive-bin texlive-bin-extra
+% port install texlive-bibtex-extra
+% port install texlive-bin texlive-bin-extra
 
 %% Set the header information
 \pagestyle{fancy}
 \definecolor{mygray}{gray}{0.6}
 \renewcommand\headrule{}
 \rhead{\footnotesize 3}
-\rhead{\textcolor{gray}{xarray: N-D labeled arrays and datasets in Python}}
+\rhead{\textcolor{gray}{Xarray: N-D labeled arrays and datasets in Python}}
 
 \begin{document}
 
@@ -33,7 +33,7 @@
 
 \section*{Title}
 
-xarray: N-D labeled arrays and datasets in Python
+Xarray: N-D labeled arrays and datasets in Python
 
 \section*{Paper Authors}
 
@@ -43,17 +43,12 @@ xarray: N-D labeled arrays and datasets in Python
 \section*{Paper Author Roles and Affiliations}
 {1. Google Research, Mountain View, CA, USA. 2. Department of Civil \& Environmental Engineering, University of Washington, Seattle, WA, USA.}
 
-% SH general note:
-% We need to figure out formatting conventions. I don't think we should italize
-% all proper nouns. Rather, I would use fixed-width text for code (including
-% class names).
-
 \section*{Abstract}
 
-\textit{Xarray} is an open source project and Python package that provides data structures for N-dimensional labeled arrays inspired by pandas.
-It provides a \textit{pandas}-like and \textit{pandas}-compatible toolkit for analytics on multi-dimensional arrays, rather than the tabular data format for which \textit{pandas} excels.
+Xarray is an open source project and Python package that provides data structures for N-dimensional labeled arrays inspired by Pandas.
+It provides a Pandas-like and Pandas-compatible toolkit for analytics on multi-dimensional arrays, rather than the tabular data format for which Pandas excels.
 Our approach adopts the Common Data Model for self-describing scientific data that is widely used in the geo-science community.
-Xarray builds on top of and seamlessly interoperates with the core scientific Python packages, such as \textit{NumPy}, \textit{SciPy}, \textit{matplotlib}, and \textit{pandas}.
+Xarray builds on top of and seamlessly interoperates with the core scientific Python packages, such as NumPy, SciPy, Matplotlib, and Pandas.
 
 \section*{Keywords}
 
@@ -63,54 +58,43 @@ Xarray builds on top of and seamlessly interoperates with the core scientific Py
 
 \section*{Introduction}
 
-% SH: tightened up description of numpy/scipy/pandas, moved description of the
-% pandas Index to later.
-
 Python has emerged as a leading programing language for both the physical sciences and data science.
-At the core of modern scientific computing and analysis in Python are the \textit{NumPy} and \textit{SciPy} packages \citep{Jones_2001,van_der_Walt_2011}, which provide a robust N-dimensional array object and the fundamental operations built upon required for science and engineering applications.
-However, much of the success of Python in data science and business analytics is
-due to \textit{Pandas} \citep{mckinney_2010}, which introduced intuitive and fast tabular data analysis tools to Python inspired by R's data.frame [CITE].
-The pandas \textit{DataFrame} and \textit{Series} objects provide unparalleled analysis tools for data alignment, resampling, grouping, pivoting, and aggregation.
-
-% SH: I removed significant duplication in this next paragraph with the abstract
+At the core of modern scientific computing and analysis in Python are the NumPy \citep{Jones_2001} and SciPy \citep{van_der_Walt_2011} packages, which provide a robust N-dimensional array object and the fundamental operations required for science and engineering applications.
+Much of the success of Python in data science and business analytics is
+due to Pandas \citep{mckinney_2010}, which introduced intuitive and fast tabular data analysis tools to Python, inspired by R's \verb|data.frame| \citep{r_2013}.
+The Pandas \verb|DataFrame| and \verb|Series| objects provide unparalleled analysis tools for data alignment, resampling, grouping, pivoting, and aggregation.
 
 Xarray implements data structures and an analytics toolkit for multi-dimensional
-labeled arrays strongly inspired by pandas.
-Pandas does include a data structure for three dimensional data, the \textit{Panel}, but the fixed rank design of pandas's data structures makes them unsuitable for applications that require arbitrary rank arrays.
-Our approach with xarray adopts the self-describing Common Data Model on which the Network Common Data Form (NetCDF) is built on \citep{Rew_1990,Brown_1993}, which provides a well defined data model for labeled N-dimensional array-oriented scientific data analysis.
+labeled arrays strongly inspired by Pandas.
+While Pandas includes a data structure called the \verb|Panel| for three dimensional data, its fixed rank design them unsuitable for applications that require arbitrary rank arrays.
+Our approach with Xarray adopts the self-describing Common Data Model on which the Network Common Data Form (NetCDF) is built \citep{Rew_1990,Brown_1993}.
+NetCDF provides a well-defined data model for labeled N-dimensional array-oriented scientific data analysis.
 
-\textit{Xarray} builds on top of, and seamlessly interoperates with the core scientific Python packages, such as \textit{NumPy}, \textit{SciPy}, \textit{matplotlib} \citep{Hunter_2007}, and \textit{pandas}.
-\textit{Xarray} provides a range of backends for serialization and IO, including the pickle, NetCDF, OPeNDAP, GRIB, and HDF file formats.
-Leveraging the \textit{dask} parallel computing library, \textit{xarray} can optionally perform efficient parallel, out-of-core analysis on datasets that are too large to fit into memory.
-Finally, \textit{xarray} interfaces with existing, domain specific packages such as \textit{UV-CDAT} \citep{uvcdat}, \textit{Iris} \citep{Iris}, and \textit{Cartopy} \citep{Cartopy}.
+Xarray builds on top of, and seamlessly interoperates with, the core scientific Python packages, such as NumPy, SciPy, Matplotlib \citep{Hunter_2007}, and Pandas.
+Xarray provides a range of backends for serialization and IO, including the Pickle, NetCDF, OPeNDAP, GRIB, and HDF file formats.
+Leveraging the Dask parallel computing library, Xarray can optionally perform efficient parallel, out-of-core analysis on datasets that are too large to fit into memory.
+Finally, Xarray interfaces with existing domain-specific packages such as UV-CDAT \citep{uvcdat}, Iris \citep{Iris}, and Cartopy \citep{Cartopy}.
 
-% SH: I'm not sure how much value this figure provides. I think the text covers
-% this pretty clearly and the pixelated nature of this particular dataset
-% makes for an ugly figure.
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=0.8\textwidth]{plotting_kelvin_original}
-	\caption{An example of a multidimensional labeled array. This figure (map) is showing the surface air temperature for the region encompassing North America for a particular day (January 1, 2013). The map is labeled with the array's coordinates, longitude and latitude.}
+	\caption{An example of a multidimensional labeled array. This figure (map) is showing the surface air temperature for the region encompassing North America for a particular day (January 1, 2013). The map is labeled with the array's coordinates: longitude, and latitude.}
 	\label{fig:temperature_map}
 \end{figure}
 
-\textbf{Purpose: Your data has labels, you should use them}
+\textbf{Purpose: Your data has labels; you should use them}
 
 Scientific data is inherently labeled.
 For example, time series data includes timestamps that label individual points in time, spatial data has coordinates (e.g. longitude, latitude, elevation), and model or laboratory experiments are often identified by unique identifiers.
-Figure \ref{fig:temperature_map} provides an example of a labeled dataset, in this case the data is a map of air temperature over North-America from a numeric weather model.
+Figure \ref{fig:temperature_map} provides an example of a labeled dataset.
+In this case the data is a map of air temperature over North-America from a numeric weather model.
 The labels on this particular dataset are time (e.g. ``2013-01-01''), longitude (x-axis), and latitude (y-axis).
 
-Raw N-dimensional arrays of numbers, implemented in the SciPy ecosystem by \text{NumPy}, are the most widely used data structure in scientific computing.
+Raw N-dimensional arrays of numbers, implemented in the SciPy ecosystem by NumPy, are the most widely used data structure in scientific computing.
 However, they lack a meaningful representation of the metadata associated with their data.
-Implementing such functionality is left to individual users and domain specific packages.
-
-So, is the time axis of my array in the first or third index position?
-Or, does my array of timestamps still align with my data after resampling?
-These sorts of operations and questions are frequent pitfalls of data scientists.
-Our core motivation to developing \textit{xarray} is provide labeled data tools
-for N-dimensional arrays that render such questions moot, because the tools
-themselves use and preserve the consistency of labels and data.
+Implementing such functionality is left to individual users and domain-specific packages.
+As a result, data scientists frequently encounter pitfalls in the form of questions like ``is the time axis of my array in the first or third index position?'' or ``does my array of timestamps still align with my data after resampling?''.
+Our core motivation for developing Xarray is to provide labeled data tools for N-dimensional arrays that render such questions moot by preserving the consistent labels within the tool.
 
 \textbf{NetCDF}
 
@@ -118,77 +102,79 @@ The Network Common Data Form (NetCDF) is a collection of self-describing, machin
 These data formats and tools facilitate the creation, access, and sharing of scientific data stored in N-dimensional arrays, alongside metadata describing the contents of each array \citep{Rew_1990}.
 NetCDF has become very popular in the geoscience community, and there are existing libraries for reading and writing netCDF in many programming languages, including C, Fortran, Python, Java, Matlab, and Julia.
 
-The principle data structure in the NetCDF data model is the \textit{dataset}.
-Each NetCDF \textit{dataset} contains \textit{dimensions}, \textit{variables}, and \textit{attributes}, each of which are identified by unique names.
-The \textit{dataset} and \textit{variable} objects may contain \textit{attributes} that describe the contents, units, history, or other metadata of the object.
-Standardized conventions, such as the Climate and Forecast (CF) Conventions \citep{eaton2003netcdf} allow for the associations of coordinate variables with \textit{dimensions}.
+The principle data structure in the NetCDF data model is the \verb|dataset|.
+Each NetCDF \verb|dataset| contains \verb|dimensions|, \verb|variables|, and \verb|attributes|, each of which are identified by unique names.
+The \verb|dataset| and \verb|variable| objects may contain \verb|attributes| that describe the contents, units, history, or other metadata of the object.
+Standardized conventions, such as the Climate and Forecast (CF) Conventions, \citep{eaton2003netcdf} allow for the associations of coordinate variables with \verb|dimensions|.
 
 \begin{figure}
 	\centering
 	\includegraphics[width=0.8\textwidth]{dataset-diagram_original}
-	\caption{An example of how a dataset (NetCDF or xarray) for a weather forecast might be structured.  This dataset has three dimensions: time, y, and x.  \textit{Temperature} and \textit{precipitation} are three-dimensional arrays that have dimensions time, y, and x.  Also included in the dataset are two-dimensional coordinate arrays \textit{latitude} and \textit{longitude}, having dimensions y and x, and \textit{reference time}, a zero-dimensional (scalar) array.}
+	\caption{An example of how a dataset (NetCDF or Xarray) for a weather forecast might be structured.  This dataset has three dimensions: time, y, and x.  \textit{Temperature} and \textit{precipitation} are three-dimensional arrays that have dimensions time, y, and x.  Also included in the dataset are two-dimensional coordinate arrays \textit{latitude} and \textit{longitude}, having dimensions y and x, and \textit{reference time}, a zero-dimensional (scalar) array.}
 	\label{fig:dataset_diagram}
 \end{figure}
 
 \section*{Implementation and architecture}
 
-NetCDF forms the basis of the \textit{xarray} data model, providing a natural and portable serialization format.
-\textit{Xarray} provides three main data structures, the \textit{Dataset}, the \textit{DataArray}, and the \textit{Coordinate} (see figure \ref{fig:dataset_diagram}).
+NetCDF forms the basis of the Xarray data model, providing a natural and portable serialization format.
+Xarray provides three main data structures: the \verb|Dataset|, the \verb|DataArray|, and the \verb|Coordinate| (Figure \ref{fig:dataset_diagram}).
 
 \textbf{DataArray}
 
-The \textit{DataArray} is \textit{xarray}'s implementation of a labeled, multi-dimensional array. It has several key properties:
+The \verb|DataArray| is Xarray's implementation of a labeled, multi-dimensional array. It has several key properties:
 
 \begin{itemize}
-	\item \textit{data}: N-dimensional array (\textit{NumPy} or \textit{dask}) holding the array’s values
-	\item \textit{dims}: dimension names for each axis (e.g., \verb|('time', 'latitude', 'longitude')|)
-	\item \textit{coords}: dict-like container of arrays (coordinates) that label each point (e.g., 1-dimensional arrays of numbers, \textit{datetime} objects or strings)
-	\item \textit{attrs}: \textit{OrderedDict} holding arbitrary metadata (e.g. units or descriptions)
+	\item \verb|data|: N-dimensional array (NumPy or dask) holding the array's values,
+	\item \verb|dims|: dimension names for each axis [e.g., \verb|(`time', `latitude', `longitude')|],
+	\item \verb|coords|: dict-like container of arrays (coordinates) that label each point (e.g., 1-dimensional arrays of numbers, \verb|datetime| objects or strings), and
+	\item \verb|attrs|: \verb|OrderedDict| holding arbitrary metadata (e.g. units or descriptions)
 \end{itemize}
 
-\textit{Xarray} uses \textit{dims} and \textit{coords} to enable its core metadata aware operations.
-Dimensions provide names that \textit{xarray} uses instead of the axis argument found in many \textit{NumPy} functions.
-Coordinates enable fast label based indexing and alignment, building on the functionality of the pandas \textit{Index}.
-\textit{DataArray} objects also can have a name and can hold arbitrary metadata in the form of their \textit{attrs} property, which can be used to further describe data (e.g. by providing units).
-Names and attributes are strictly for users and user-written code; in general \textit{xarray} makes no attempt to interpret them, and propagates them only in unambiguous cases.
+Xarray uses \verb|dims| and \verb|coords| to enable its core metadata-aware operations.
+Dimensions provide names that Xarray uses instead of the axis argument found in many NumPy functions.
+Coordinates enable fast label-based indexing and alignment, building on the functionality of the Pandas \verb|Index|.
+\verb|DataArray| objects also can have a name and can hold arbitrary metadata in the form of their \verb|attrs| property, which can be used to further describe data (e.g. by providing units).
+Names and attributes are strictly for users and user-written code; in general Xarray makes no attempt to interpret them, and propagates them only in unambiguous cases.
 
 \textbf{Coordinate}
 
-Coordinates are ancillary variables stored for \textit{DataArray} and \textit{Dataset} objects in the \textit{coords} attribute.
-Unlike attributes, \textit{xarray} does interpret and persist coordinates in operations that transform \textit{xarray} objects.
-One dimensional coordinates with a name equal to their sole dimension take on a special meaning in \textit{xarray}.
-They are used for label based indexing and alignment, like the \textit{Index} found on a \textit{pandas} objects.
-Their implementation also makes use of the pandas Index, an immutable ordered set backed by a hash-table.
+Coordinates are ancillary variables stored for \verb|DataArray| and \verb|Dataset| objects in the \verb|coords| attribute.
+Unlike attributes, Xarray does interpret and persist coordinates in operations that transform Xarray objects.
+One dimensional coordinates with a name equal to their sole dimension take on a special meaning in Xarray.
+They are used for label-based indexing and alignment, like the \verb|Index| found on a Pandas objects.
+Their implementation also makes use of the Pandas \verb|Index|, an immutable ordered set backed by a hash-table.
 
 \textbf{Dataset}
 
-The \textit{Dataset} is \textit{xarray}’s multi-dimensional equivalent of a \textit{DataFrame}. It is a dict-like container of labeled arrays (\textit{DataArray}s) with aligned dimensions.
+The \verb|Dataset| is Xarray's multi-dimensional equivalent of a \verb|DataFrame|. It is a dict-like container of labeled arrays (\verb|DataArray|s) with aligned dimensions.
 It is designed as an in-memory representation of a NetCDF dataset.
-In addition to the dict-like interface of the dataset itself, which can be used to access any \textit{DataArray} in a \textit{Dataset}, datasets have four key properties:
+In addition to the dict-like interface of the dataset itself, which can be used to access any \verb|DataArray| in a \verb|Dataset|, datasets have four key properties:
 
 \begin{itemize}
-	\item \textit{dims}: dictionary mapping from dimension names to the fixed length of each dimension (e.g., \verb|{'x': 6, 'y': 6, 'time': 8}|)
-	\item \textit{data vars}: dict-like container of \textit{DataArray}s corresponding to variables
-	\item \textit{coords}: dict-like container of \textit{DataArray}s intended to label points used in \textit{data vars} (e.g., 1-dimensional arrays of numbers, \textit{datetime} objects or strings)
-	\item \textit{attrs}: \textit{OrderedDict} to hold arbitrary metadata pertaining to the dataset
+	\item \verb|dims|: dictionary mapping from dimension names to the fixed length of each dimension (e.g., \verb|{`x': 6, `y': 6, `time': 8}|)
+	\item \verb|data vars|: dict-like container of \verb|DataArray|s corresponding to variables
+	\item \verb|coords|: dict-like container of \verb|DataArray|s intended to label points used in \verb|data vars| (e.g., 1-dimensional arrays of numbers, \verb|datetime| objects or strings)
+	\item \verb|attrs|: \verb|OrderedDict| to hold arbitrary metadata pertaining to the dataset
 \end{itemize}
 
 \textbf{Core Xarray Features}
 
-\textit{Xarray} includes a robust feature set.
-The following list highlights some of the key features available in \textit{xarray}.
-The \textit{xarray} documentation \citep{xarray_docs} includes a complete description of the available features, their usage, as well as detailed examples.
+Xarray includes a powerful and growing feature set.
+The following list highlights some of the key features available in Xarray.
+The Xarray documentation \citep{Xarray_docs} includes a complete description of available features and their usage.
 
 \begin{itemize}
-	\item \textit{Label-based indexing}: Similarly to \textit{pandas} objects, \textit{xarray} objects support both integer and label based lookups along each dimension.
-	However, \textit{xarray} objects also have named dimensions, so you can optionally use dimension names instead of relying on the positional ordering of dimensions.
-	\item \textit{Arithmetic}: arithmetic on \textit{xarray} objects is vectorized using the underlying N-dimensional array.
-	\item \textit{Split-apply-combine}: \textit{xarray} includes N-dimensional grouped operations implementing the split-apply-combine strategy \ref{Wickham_2011}.
-	\item \textit{Resampling and Rolling Window}: utilizing the efficient resampling methods from \textit{pandas} and rolling window operations from \textit{bottleneck}, \textit{xarray} offers a robust set of resampling and rolling window operations along a single dimension.
-	\item \textit{Plotting}: \textit{xarray} plotting functionality is a thin wrapper around the popular \textit{matplotlib} library. \textit{Matplotlib} syntax and function names were copied as much as possible, which makes for an easy transition between the two.
-	\item \textit{Interactivity with pandas}: One of the most important features of \textit{xarray} is the ability to convert to and from \textit{pandas} objects to interact with the rest of the PyData ecosystem.
-	\item \textit{Serialization and I/O}: \textit{xarray} supports direct serialization and IO to several file formats including pickle, NetCDF, OPeNDAP, GRIB, and HDF by integrating with third-party libraries. Additional serialization formats for 1-dimensional data are available through \textit{pandas}.
-	% SH: add dask explicitly? Maybe not?
+	\item \textit{Label-based indexing}: Similarly to Pandas objects, Xarray objects support both integer- and label-based lookups along each dimension.
+	However, Xarray objects also have named dimensions, so you can optionally use dimension names instead of relying on the positional ordering of dimensions.
+	\item \textit{Arithmetic}: arithmetic on Xarray objects is vectorized using the underlying N-dimensional array.
+	\item \textit{Split-apply-combine}: Xarray includes N-dimensional grouped operations implementing the split-apply-combine strategy \citep{wickham_2011}.
+	\item \textit{Resampling and rolling window operations}: Utilizing the efficient resampling methods from Pandas and rolling window operations from Bottleneck, Xarray offers a robust set of resampling and rolling window operations along a single dimension.
+	\item \textit{Plotting}: Xarray plotting functionality is a thin wrapper around the popular Matplotlib library.
+	Xarray uses the syntax and function names from Matplotlib whenever possible, resulting in a seamless transition between the two.
+	\item \textit{Interactivity with Pandas}: One of the most important features of Xarray is the ability to convert to and from Pandas objects to interact with the rest of the PyData ecosystem.
+	\item \textit{Serialization and I/O}: Xarray supports direct serialization and I/O to several file formats including pickle, NetCDF, OPeNDAP, GRIB, and HDF by integrating with third-party libraries.
+	Additional serialization formats for 1-dimensional data are available through Pandas.
+	\item \textit{Out-of-core computation}: Xarray integrates with Dask to optionally support parallel streaming computation on datasets that do not fit into memory.
 \end{itemize}
 
 \section*{Quality control}
@@ -196,10 +182,10 @@ The \textit{xarray} documentation \citep{xarray_docs} includes a complete descri
 % \textcolor{blue}{Detail the level of testing that has been carried out on the code (e.g. unit, functional, load etc.), and in which environments.
 % If not already included in the software documentation, provide details of how a user could quickly understand if the software is working (e.g. providing examples of running the software with sample input and output data). }
 
-\textit{Xarray} is provided with a large test suite comprised of over 900 unit tests.
-These tests cover the core \textit{xarray} functionality as well as features facilitated by optional dependencies.
+Xarray is provided with a large test suite comprised of over 900 unit tests.
+These tests cover the core Xarray functionality as well as features facilitated by optional dependencies.
 The unit tests are executed automatically on the TravisCI (Linux) \citep{TravisCI} and Appveyor (Windows) \citep{Appveyor} continuous integration systems.
-A selection of sample data is also distributed with the source code, allowing users to reproduce any examples in the \textit{xarray} documentation.
+A selection of sample data is also distributed with the source code, allowing users to reproduce any examples in the Xarray documentation.
 
 \section*{(2) Availability}
 \vspace{0.5cm}
@@ -221,17 +207,17 @@ Xarray is implemented in pure Python and relies on compiled dependencies for
 speed.
 
 \begin{itemize}
-\item \textit{NumPy}: 1.7 or later
-\item \textit{pandas}: 0.15.0 or later
-\item \textit{netcdf4-python}: (optional) used for reading and writing netCDF files
-\item \textit{SciPy}: (optional) used as a fallback for reading/writing netCDF3
-\item \textit{Pydap}: (optional) used as a fallback for accessing OPeNDAP
-\item \textit{h5netcdf}: (optional) an alternative library for reading and writing netCDF4 files that does not use the netCDF-C libraries
-\item \textit{bottleneck}: (optional) speeds up NaN-skipping and rolling window aggregations by a large factor
-\item \textit{cyordereddict}: (optional) speeds up most internal operations with \textit{xarray} data structures
-\item \textit{dask}: (optional) required for out-of-core parallel computation with \textit{dask}
-\item \textit{matplotlib}: (optional) required for plotting
-\item \textit{seaborn}: (optional) additional plotting functionality
+\item NumPy: 1.7 or later
+\item Pandas: 0.15.0 or later
+\item netcdf4-python: (optional) used for reading and writing netCDF files
+\item SciPy: (optional) used as a fallback for reading/writing netCDF3
+\item Pydap: (optional) used as a fallback for accessing OPeNDAP
+\item h5netcdf: (optional) an alternative library for reading and writing netCDF4 files that does not use the netCDF-C libraries
+\item Bottleneck: (optional) speeds up NaN-skipping and rolling window aggregations by a large factor
+\item cyordereddict: (optional) speeds up most internal operations with Xarray data structures
+\item Dask: (optional) required for out-of-core parallel computation
+\item Matplotlib: (optional) required for plotting
+\item seaborn: (optional) additional plotting functionality
 \end{itemize}
 
 
@@ -259,7 +245,7 @@ TBD (from GitHub, sample below, need to get full names)
 
 \begin{description}[noitemsep,topsep=0pt]
 	\item[Name:] Zenodo
-	\item[Persistent identifier:] TBD, note: I've registered xarray with Zenodo, the first DOI will be automatically generated when 0.8.0 is released
+	\item[Persistent identifier:] TBD, note: I've registered Xarray with Zenodo, the first DOI will be automatically generated when 0.8.0 is released
 	\item[Licence:] Apache, v2.0
 	\item[Publisher:]  TBD
 	\item[Version published:] 0.8.0
@@ -281,16 +267,16 @@ English.
 
 \section*{(3) Reuse potential}
 
-\textit{Xarray} was written in a modular, objected-oriented way, to build upon and extend the core scientific Python libraries in a domain agnostic fashion.
-We have intentionally avoided including domain specific functionality in the library, leaving that to third party libraries.
-It has been widely adopted in the geoscience community \citep[e.g.][]{Dawson_2016a,Dawson_2016b,xgcm}, but has also been used in physics \citep[e.g.][]{pycalphad}, general time series analytics [cite cesium.ml] and finance.
-\textit{Xarray} is developed and supported by a team of volunteers. The primary avenue for user support is \textit{StackOverflow} \citep{stackoverflow}, with the ``xarray-python'' tag.
-Additionally, we use GitHub for a bug tracker (\url{https://github.com/pydata/xarray/issues}) and maintain the ``xarray'' mailing list on Google groups (\url{https://groups.google.com/forum/#!forum/xarray}).
+Xarray was written in a modular, objected-oriented way, to build upon and extend the core scientific Python libraries in a domain-agnostic fashion.
+We have intentionally avoided including domain-specific functionality in the library, leaving that to third party libraries.
+It has been widely adopted in the geoscience community \citep[e.g.][]{Dawson_2016a,Dawson_2016b,xgcm}, but has also been used in physics \citep[e.g.][]{pycalphad}, time series analytics \citep{cesium}, and finance.
+Xarray is developed and supported by a team of volunteers. The primary avenue for user support is \textit{StackOverflow} \citep{stackoverflow}, with the ``xarray-python'' tag.
+Additionally, we use GitHub for a bug tracker (\url{https://github.com/pydata/xarray/issues}) and maintain the ``xarray-dev'' mailing list on Google Groups (\url{https://groups.google.com/forum/#!forum/xarray}).
 
 \section*{Acknowledgements}
 
 % Stephan to fill in as appropriate.
-Initial development of xarray was supported by The Climate Corporation.
+Initial development of Xarray was supported by The Climate Corporation.
 
 \section*{Competing interests}
 
