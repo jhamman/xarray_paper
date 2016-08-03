@@ -132,17 +132,10 @@ The \verb|DataArray| is Xarray's implementation of a labeled, multi-dimensional 
 
 Xarray uses \verb|dims| and \verb|coords| to enable its core metadata-aware operations.
 Dimensions provide names that Xarray uses instead of the axis argument found in many NumPy functions.
-Coordinates enable fast label-based indexing and alignment, building on the functionality of the Pandas \verb|Index|.
+Coordinates are ancillary variables used to enable fast label-based indexing and alignment, building on the functionality of the Pandas \verb|Index|.
 \verb|DataArray| objects also can have a name and can hold arbitrary metadata in the form of their \verb|attrs| property, which can be used to further describe data (e.g. by providing units).
 Names and attributes are strictly for users and user-written code; in general Xarray makes no attempt to interpret them, and propagates them only in unambiguous cases.
-
-\textbf{Coordinate}
-
-Coordinates are ancillary variables stored for \verb|DataArray| and \verb|Dataset| objects in the \verb|coords| attribute.
-Unlike attributes, Xarray does interpret and persist coordinates in operations that transform Xarray objects.
-One dimensional coordinates with a name equal to their sole dimension take on a special meaning in Xarray.
-They are used for label-based indexing and alignment, like the \verb|Index| found on a Pandas objects.
-Their implementation also makes use of the Pandas \verb|Index|, an immutable ordered set backed by a hash-table.
+In contrast, Xarray does interpret and persist coordinates in operations that transform Xarray objects.
 
 \textbf{Dataset}
 
