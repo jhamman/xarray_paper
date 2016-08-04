@@ -77,8 +77,8 @@ Finally, Xarray interfaces with existing domain-specific packages such as UV-CDA
 
 \begin{figure}[h]
 	\centering
-	\includegraphics[width=0.8\textwidth]{plotting_kelvin_original}
-	\caption{An example of a multidimensional labeled array. This figure (map) is showing the surface air temperature for the region encompassing North America for a particular day (January 1, 2013). The map is labeled with the array's coordinates: longitude, and latitude.}
+	\includegraphics[width=0.8\textwidth]{ERA-Interim_surface_air_temp_figure}
+	\caption{An example of a multidimensional labeled array. This figure (map) is showing the global surface air temperature for May 1, 2016 from ERA-Interim Reanalyis \citep{Dee_2011}. The map is labeled with the array's coordinates: longitude, and latitude.}
 	\label{fig:temperature_map}
 \end{figure}
 
@@ -87,8 +87,8 @@ Finally, Xarray interfaces with existing domain-specific packages such as UV-CDA
 Scientific data is inherently labeled.
 For example, time series data includes timestamps that label individual points in time, spatial data has coordinates (e.g. longitude, latitude, elevation), and model or laboratory experiments are often identified by unique identifiers.
 Figure \ref{fig:temperature_map} provides an example of a labeled dataset.
-In this case the data is a map of air temperature over North-America from a numeric weather model.
-The labels on this particular dataset are time (e.g. ``2013-01-01''), longitude (x-axis), and latitude (y-axis).
+In this case the data is a map of global air temperature from a numeric weather model.
+The labels on this particular dataset are time (e.g. ``2016-05-01''), longitude (x-axis), and latitude (y-axis).
 
 Raw N-dimensional arrays of numbers, implemented in the SciPy ecosystem by NumPy, are the most widely used data structure in scientific computing.
 However, they lack a meaningful representation of the metadata associated with their data.
