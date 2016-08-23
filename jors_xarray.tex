@@ -46,8 +46,8 @@ xarray: N-D labeled arrays and datasets in Python
 \section*{Abstract}
 
 \textbf{xarray} is an open source project and Python package that provides a toolkit and data structures for N-dimensional labeled arrays.
-Our approach adopts the Common Data Model for self-describing scientific data that is widely used throughout the geo-science community.
-Key features of the \textbf{xarray} package include label-based indexing and arithmetic, interoperability with the core scientific Python packages (e.g. Pandas, NumPy, Matplotlib), out-of-core computation on datasets that don't fit into memory, a wide range of serialization and I/O options, and advanced multi-dimensional data manipulation tools such as group-by and resampling.
+Our approach combines an API inspired by pandas with the Common Data Model for self-described scientific data.
+Key features of the \textbf{xarray} package include label-based indexing and arithmetic, interoperability with the core scientific Python packages (e.g., Pandas, NumPy, Matplotlib), out-of-core computation on datasets that don't fit into memory, a wide range of serialization and I/O options, and advanced multi-dimensional data manipulation tools such as group-by and resampling.
 
 \textbf{xarray}
 
@@ -94,7 +94,8 @@ Unlabeled, N-dimensional arrays of numbers, implemented in the SciPy ecosystem b
 However, they lack a meaningful representation of the metadata associated with their data.
 Implementing such functionality is left to individual users and domain-specific packages.
 As a result, data scientists frequently encounter pitfalls in the form of questions like ``is the time axis of my array in the first or third index position?'' or ``does my array of timestamps still align with my data after resampling?''.
-Our core motivation for developing \textbf{xarray} is to provide labeled data tools for N-dimensional arrays that render such questions moot by preserving consistent labels within the tool.
+
+Our core motivation for developing \textbf{xarray} is to provide labeled data tools for N-dimensional arrays that render such questions moot. Every operation in xarray both relies on and maintains the consistency of labels.
 
 \textbf{NetCDF}
 
@@ -107,17 +108,10 @@ Each netCDF \verb|dataset| contains \verb|dimensions|, \verb|variables|, and \ve
 The \verb|dataset| and \verb|variable| objects may contain \verb|attributes| that describe the contents, units, history, or other metadata of the object.
 Standardized conventions, such as the Climate and Forecast (CF) Conventions, \citep{eaton2003netcdf} allow for the associations of coordinate variables with \verb|dimensions|.
 
-\begin{figure}
-	\centering
-	\includegraphics[width=0.8\textwidth]{dataset-diagram_original}
-	\caption{An example of how a dataset (netCDF or \textbf{xarray}) for a weather forecast might be structured.  This dataset has three dimensions: time, y, and x.  \textit{Temperature} and \textit{precipitation} are three-dimensional arrays that have dimensions time, y, and x.  Also included in the dataset are two-dimensional coordinate arrays \textit{latitude} and \textit{longitude}, having dimensions y and x, and \textit{reference time}, a zero-dimensional (scalar) array.}
-	\label{fig:dataset_diagram}
-\end{figure}
-
 \section*{Implementation and architecture}
 
 NetCDF forms the basis of the \textbf{xarray} data model, providing a natural and portable serialization format.
-\textbf{xarray} provides three main data structures: the \verb|Dataset|, the \verb|DataArray|, and the \verb|Coordinate| (Figure \ref{fig:dataset_diagram}).
+\textbf{xarray} provides two main data structures the \verb|DataArray| and the \verb|Dataset|.
 
 \textbf{DataArray}
 
@@ -145,10 +139,21 @@ In addition to the dict-like interface of the dataset itself, which can be used 
 
 \begin{itemize}
 	\item \verb|dims|: dictionary mapping from dimension names to the fixed length of each dimension (e.g., \verb|{`x': 6, `y': 6, `time': 8}|)
-	\item \verb|data vars|: dict-like container of \verb|DataArray|s corresponding to variables
+	\item \verb|data vars|: dict-like container of \verb|DataArray|s corresponding to data variables
 	\item \verb|coords|: dict-like container of \verb|DataArray|s intended to label points used in \verb|data vars| (e.g., 1-dimensional arrays of numbers, \verb|datetime| objects or strings)
 	\item \verb|attrs|: \verb|OrderedDict| to hold arbitrary metadata pertaining to the dataset
 \end{itemize}
+
+Arrays can share any number of dimensions in common, but they are presumed to share a common coordinate system.
+Coordinates can also have any number of dimensions but denote constant/independent quantities, unlike the varying/dependent quantities that belong in data.
+Figure \ref{fig:dataset_diagram} illustrates these concepts for an example weather \verb|Dataset|.
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.8\textwidth]{dataset-diagram_original}
+	\caption{An example of how a dataset (netCDF or \textbf{xarray}) for a weather forecast might be structured. This dataset has three dimensions, time, y, and x, each of which is also a one-dimensional coordinate. \textit{Temperature} and \textit{precipitation} are three-dimensional data variables.  Also included in the dataset are two-dimensional coordinates \textit{latitude} and \textit{longitude}, having dimensions y and x, and \textit{reference time}, a zero-dimensional (scalar) coordinate.}
+	\label{fig:dataset_diagram}
+\end{figure}
 
 \textbf{Core xarray Features}
 
@@ -159,15 +164,17 @@ The xarray documentation \citep{xarray_docs} includes a complete description of 
 \begin{itemize}
 	\item \textit{Label-based indexing}: Similarly to pandas objects, \textbf{xarray} objects support both integer- and label-based lookups along each dimension.
 	However, \textbf{xarray} objects also have named dimensions, so you can optionally use dimension names instead of relying on the positional ordering of dimensions.
-	\item \textit{Arithmetic}: arithmetic on \textbf{xarray} objects is vectorized along named dimensions and coordinates using the underlying N-dimensional array.
+	\item \textit{Arithmetic}: arithmetic between \textbf{xarray} objects vectorizes based on dimension names, automatically looping (broadcasting) over each distinct dimension.
+	\item \textit{Aggregation}: summing a dimension of an \textbf{xarray} object can be done by dimension name instead of an integer axis number.
+	\item \textit{Alignment}: \textbf{xarray} features database-like alignment based on coordinate labels that smoothly handles missing values.
 	\item \textit{Split-apply-combine}: \textbf{xarray} includes N-dimensional grouped operations implementing the split-apply-combine strategy \citep{wickham_2011}.
 	\item \textit{Resampling and rolling window operations}: Utilizing the efficient resampling methods from pandas and rolling window operations from Bottleneck \citep{Bottleneck}, \textbf{xarray} offers a robust set of resampling and rolling window operations along a single dimension.
 	\item \textit{Plotting}: \textbf{xarray} plotting functionality is a thin wrapper around the popular Matplotlib library.
 	\textbf{xarray} uses the syntax and function names from Matplotlib whenever possible, resulting in a seamless transition between the two.
-	\item \textit{Interactivity with pandas}: A key feature of \textbf{xarray} is the ability to convert to and from pandas objects to interact with the rest of the PyData ecosystem.
+	\item \textit{Interactivity with pandas}: \textbf{xarray} objects seamlessly to convert to and from pandas objects to interact with the rest of the PyData ecosystem.
 	\item \textit{Serialization and I/O}: \textbf{xarray} supports direct serialization and I/O to several file formats including pickle, netCDF, OPeNDAP (read-only), GRIB1/2 (read-only), and HDF by integrating with third-party libraries.
 	Additional serialization formats for 1-dimensional data are available through pandas.
-	\item \textit{Out-of-core computation}: \textbf{xarray} integrates with dask to optionally support parallel streaming computation on datasets that do not fit into memory.
+	\item \textit{Out-of-core computation}: \textbf{xarray} integrates with dask to support parallel and streaming computation on datasets that do not fit into memory.
 \end{itemize}
 
 \section*{Quality control}
