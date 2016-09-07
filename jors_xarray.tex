@@ -47,9 +47,7 @@ xarray: N-D labeled arrays and datasets in Python
 
 \textbf{xarray} is an open source project and Python package that provides a toolkit and data structures for N-dimensional labeled arrays.
 Our approach combines an API inspired by pandas with the Common Data Model for self-described scientific data.
-Key features of the \textbf{xarray} package include label-based indexing and arithmetic, interoperability with the core scientific Python packages (e.g., Pandas, NumPy, Matplotlib), out-of-core computation on datasets that don't fit into memory, a wide range of serialization and input/output (I/O) options, and advanced multi-dimensional data manipulation tools such as group-by and resampling.
-
-\textbf{xarray}
+Key features of the \textbf{xarray} package include label-based indexing and arithmetic, interoperability with the core scientific Python packages (e.g., pandas, NumPy, Matplotlib), out-of-core computation on datasets that don't fit into memory, a wide range of serialization and input/output (I/O) options, and advanced multi-dimensional data manipulation tools such as group-by and resampling.
 
 \section*{Keywords}
 
@@ -72,7 +70,7 @@ NetCDF provides a well-defined data model for labeled N-dimensional array-orient
 
 \textbf{xarray} builds on top of, and seamlessly interoperates with, the core scientific Python packages, such as NumPy, SciPy, Matplotlib \citep{Hunter_2007}, and pandas.
 \textbf{xarray} provides a range of backends for serialization and input/output (IO), including the Pickle, netCDF, OPeNDAP (read-only), GRIB1/2 (read-only), and HDF file formats.
-Leveraging the dask parallel computing library, \textbf{xarray} can optionally perform efficient parallel, out-of-core analysis on datasets that are too large to fit into memory.
+Leveraging the dask parallel computing library \cite{dask}, \textbf{xarray} can optionally perform efficient parallel, out-of-core analysis on datasets that are too large to fit into memory.
 Finally, \textbf{xarray} interfaces with existing domain-specific packages such as UV-CDAT \citep{uvcdat}, Iris \citep{Iris}, and Cartopy \citep{Cartopy}.
 
 \begin{figure}[h]
@@ -90,12 +88,12 @@ Figure \ref{fig:temperature_map} provides an example of a labeled dataset.
 In this case the data is a map of global air temperature from a numeric weather model.
 The labels on this particular dataset are time (e.g. ``2016-05-01''), longitude (x-axis), and latitude (y-axis).
 
-Unlabeled, N-dimensional arrays of numbers, implemented in the SciPy ecosystem by NumPy, are the most widely used data structure in Python's scientific computing ecosystem.
+Unlabeled, N-dimensional arrays of numbers (e.g., NumPy's ndarray) are the most widely used data structure in scientific computing.
 However, they lack a meaningful representation of the metadata associated with their data.
 Implementing such functionality is left to individual users and domain-specific packages.
-As a result, data scientists frequently encounter pitfalls in the form of questions like ``is the time axis of my array in the first or third index position?'' or ``does my array of timestamps still align with my data after resampling?''.
+As a result, programmers frequently encounter pitfalls in the form of questions like ``is the time axis of my array in the first or third index position?'' or ``does my array of timestamps still align with my data after resampling?''.
 
-The core motivation for developing \textbf{xarray} was to provide labeled data tools for N-dimensional arrays that render such questions moot. Every operation in xarray both relies on and maintains the consistency of labels.
+The core motivation for developing \textbf{xarray} was to provide labeled data tools for N-dimensional arrays that render such questions moot. Every operation in \textbf{xarray} both relies on and maintains the consistency of labels.
 
 \textbf{NetCDF}
 
@@ -111,7 +109,7 @@ Standardized conventions, such as the Climate and Forecast (CF) Conventions \cit
 \section*{Implementation and architecture}
 
 NetCDF forms the basis of the \textbf{xarray} data model and provides a natural and portable serialization format.
-\textbf{xarray} provides two main data structures the \verb|DataArray| and the \verb|Dataset|.
+Building on netCDF, \textbf{xarray} features two main data structures: the \verb|DataArray| and the \verb|Dataset|.
 
 \begin{figure}
 	\centering
@@ -146,8 +144,8 @@ In addition to the dict-like interface of the dataset itself, which can be used 
 
 \begin{itemize}
 	\item \verb|dims|: dictionary mapping from dimension names to the fixed length of each dimension (e.g., \verb|{`x': 6, `y': 6, `time': 8}|)
-	\item \verb|data vars|: dict-like container of \verb|DataArray|s corresponding to data variables
-	\item \verb|coords|: dict-like container of \verb|DataArray|s intended to label points used in \verb|data vars| (e.g., 1-dimensional arrays of numbers, \verb|datetime| objects or strings)
+	\item \verb|data_vars|: dict-like container of \verb|DataArray|s corresponding to data variables
+	\item \verb|coords|: dict-like container of \verb|DataArray|s intended to label points used in \verb|data_vars| (e.g., 1-dimensional arrays of numbers, \verb|datetime| objects or strings)
 	\item \verb|attrs|: \verb|OrderedDict| to hold arbitrary metadata pertaining to the dataset
 \end{itemize}
 
@@ -164,7 +162,7 @@ The xarray documentation \citep{xarray_docs} includes a complete description of 
 \begin{itemize}
 	\item \textit{Label-based indexing}: Similarly to pandas objects, \textbf{xarray} objects support both integer- and label-based lookups along each dimension.
 	However, \textbf{xarray} objects also have named dimensions, so you can optionally use dimension names instead of relying on the positional ordering of dimensions.
-	\item \textit{Arithmetic}: arithmetic between \textbf{xarray} objects vectorizes based on dimension names, automatically looping (broadcasting) over each distinct dimension.
+	\item \textit{Arithmetic}: arithmetic between \textbf{xarray} objects vectorizes based on dimension names, automatically looping (broadcasting) over each distinct dimension. This eliminates the need to insert dummy dimensions of size one to facilitate broadcasting, a common pattern with NumPy.
 	\item \textit{Aggregation}: calculation of statistics (e.g. sum) along a dimension of an \textbf{xarray} object can be done by dimension name instead of an integer axis number.
 	\item \textit{Alignment}: \textbf{xarray} features database-like alignment based on coordinate labels that smoothly handles missing values.
 	\item \textit{Split-apply-combine}: \textbf{xarray} includes N-dimensional grouped operations implementing the split-apply-combine strategy \citep{wickham_2011}.
@@ -174,7 +172,7 @@ The xarray documentation \citep{xarray_docs} includes a complete description of 
 	\item \textit{Interactivity with pandas}: \textbf{xarray} objects seamlessly to convert to and from pandas objects to interact with the rest of the PyData ecosystem.
 	\item \textit{Serialization and I/O}: \textbf{xarray} supports direct serialization and I/O to several file formats including pickle, netCDF, OPeNDAP (read-only), GRIB1/2 (read-only), and HDF by integrating with third-party libraries.
 	Additional serialization formats for 1-dimensional data are available through pandas.
-	\item \textit{Out-of-core computation}: \textbf{xarray} integrates with dask to support parallel and streaming computation on datasets that do not fit into memory.
+	\item \textit{Out-of-core computation}: \textbf{xarray}'s data structures can be backed by dask \cite{dask} instead of NumPy to support parallel and streaming computation on data that does not fit into memory, up to 100s of GB or TBs in size. Such large datasets (``big data'') are increasingly prevalent in science.
 \end{itemize}
 
 \section*{Quality control}
@@ -240,9 +238,11 @@ speed.
 \item Eugene Brevdo, Google Research
 \item Fabien Maussion, Institute of Atmospheric and Cryospheric Sciences, University of Innsbruck
 \item Filipe Fernandes, Universidade de São Paulo
+\item Guido Imperiale
 \item Igor Babuschkin, School of Physics and Astronomy, University of Manchester
 \item Jeffrey Gerard, The Climate Corporation
 \item Jeremy McGibbon, Department of Atmospheric Sciences, University of Washington
+\item Julia Signell, Department of Civil and Environmental Engineering, Princeton University
 \item Joseph Hamman, Civil and Environmental Engineering, University of Washington
 \item Jonathan Helmus, Environmental Science Division, Argonne National Laboratory
 \item Kelsey Jordahl, Planet Labs
