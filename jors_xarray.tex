@@ -44,12 +44,13 @@ xarray: N-D labeled arrays and datasets in Python
 \section*{Abstract}
 
 \textbf{xarray} is an open source project and Python package that provides a toolkit and data structures for N-dimensional labeled arrays.
-Our approach combines an API inspired by pandas with the Common Data Model for self-described scientific data.
+Our approach combines an application programing interface (API) inspired by pandas with the Common Data Model for self-described scientific data.
 Key features of the \textbf{xarray} package include label-based indexing and arithmetic, interoperability with the core scientific Python packages (e.g., pandas, NumPy, Matplotlib), out-of-core computation on datasets that don't fit into memory, a wide range of serialization and input/output (I/O) options, and advanced multi-dimensional data manipulation tools such as group-by and resampling.
+\textbf{xarray}, as a data model and analytics toolkit, has been widely adopted in the geoscience community, but has also been used in physics, time series analytics, and finance.
 
 \section*{Keywords}
 
-{Data Analysis; Python; pandas; netCDF}
+{Python; pandas; netCDF; multidimensional; data, data handling; data analysis}
 
 \section*{(1) Overview}
 
@@ -58,12 +59,12 @@ Key features of the \textbf{xarray} package include label-based indexing and ari
 Python has emerged as a leading programing language for both the physical sciences and data sciences.
 At the core of modern scientific computing and analysis in Python are the NumPy \citep{Jones_2001} and SciPy \citep{van_der_Walt_2011} packages, which provide a robust N-dimensional array object and the fundamental operations required for science and engineering applications.
 Much of the success of Python in data science and business analytics is due to pandas \citep{mckinney_2010}, which introduced intuitive and fast tabular data analysis tools to Python, inspired by R's \verb|data.frame| \citep{r_2013}.
-The pandas \verb|DataFrame| and \verb|Series| objects provide unparalleled analysis tools for data alignment, resampling, grouping, pivoting, and aggregation.
+The pandas \verb|DataFrame| and \verb|Series| objects provide unparalleled combination of analysis tools for data alignment, resampling, grouping, pivoting, and aggregation.
 
-\textbf{xarray} implements data structures and an analytics toolkit for multi-dimensional
-labeled arrays strongly inspired by pandas.
+\textbf{xarray} implements data structures and an analytics toolkit for multi-dimensional labeled arrays strongly inspired by pandas.
 While pandas includes a data structure called the \verb|Panel| for three dimensional data, its fixed rank design make it unsuitable for applications that require arbitrary rank arrays.
-Our approach with \textbf{xarray} adopts the self-describing Common Data Model on which the network Common Data Form (netCDF) is built \citep{Rew_1990,Brown_1993}.
+Additionally, many of the features that make the pandas \verb|DataFrame| and \verb|Series| objects so useful, are not fully available on the \verb|Panel|.
+Our approach with \textbf{xarray} adopts Unidata’s self-describing Common Data Model on which the network Common Data Form (netCDF) is built \citep{Rew_1990,Brown_1993}.
 NetCDF provides a well-defined data model for labeled N-dimensional array-oriented scientific data analysis.
 
 \textbf{xarray} builds on top of, and seamlessly interoperates with, the core scientific Python packages, such as NumPy, SciPy, Matplotlib \citep{Hunter_2007}, and pandas.
@@ -162,11 +163,12 @@ The xarray documentation \citep{xarray_docs} includes a complete description of 
 	However, \textbf{xarray} objects also have named dimensions, so you can optionally use dimension names instead of relying on the positional ordering of dimensions.
 	\item \textit{Arithmetic}: arithmetic between \textbf{xarray} objects vectorizes based on dimension names, automatically looping (broadcasting) over each distinct dimension. This eliminates the need to insert dummy dimensions of size one to facilitate broadcasting, a common pattern with NumPy.
 	\item \textit{Aggregation}: calculation of statistics (e.g. sum) along a dimension of an \textbf{xarray} object can be done by dimension name instead of an integer axis number.
-	\item \textit{Alignment}: \textbf{xarray} features database-like alignment based on coordinate labels that smoothly handles missing values.
+	\item \textit{Alignment}: \textbf{xarray} xarray enables joining of xarray objects along common coordinates.
 	\item \textit{Split-apply-combine}: \textbf{xarray} includes N-dimensional grouped operations implementing the split-apply-combine strategy \citep{wickham_2011}.
 	\item \textit{Resampling and rolling window operations}: Utilizing the efficient resampling methods from pandas and rolling window operations from Bottleneck \citep{Bottleneck}, \textbf{xarray} offers a robust set of resampling and rolling window operations along a single dimension.
 	\item \textit{Plotting}: \textbf{xarray} plotting functionality is a thin wrapper around the popular Matplotlib library.
 	\textbf{xarray} uses the syntax and function names from Matplotlib whenever possible, resulting in a seamless transition between the two.
+	\item \textit{Missing Data}: \textbf{xarray} smoothly handles missing data in its arithmetic operations including resampling and group-by methods. \textbf{xarray}'s alignment methods also intelligently handle missing data when combining data objects.
 	\item \textit{Interactivity with pandas}: \textbf{xarray} objects seamlessly to convert to and from pandas objects to interact with the rest of the PyData ecosystem.
 	\item \textit{Serialization and I/O}: \textbf{xarray} supports direct serialization and I/O to several file formats including pickle, netCDF, OPeNDAP (read-only), GRIB1/2 (read-only), and HDF by integrating with third-party libraries.
 	Additional serialization formats for 1-dimensional data are available through pandas.
@@ -291,9 +293,13 @@ English.
 \section*{(3) Reuse potential}
 
 \textbf{xarray} was written in a modular, objected-oriented way, to build upon and extend the core scientific Python libraries in a domain-agnostic fashion.
+The \textbf{xarray} documentation is complete with a wide range of examples and a number of tutorials that use real-world datasets that are available in the \textbf{xarray} repository.
 We have intentionally avoided including domain-specific functionality in the library, leaving that to third party libraries.
+The core \textbf{xarray} data structures (the \verb|DataArray| and the \verb|Dataset|) are extensible through subclassing or, the preferred approach of composition.
+\textbf{xarray} provides a high-level accessor to allow users to easily implement domain specific features within the \textbf{xarray} data objects.
 It has been widely adopted in the geoscience community \citep[e.g.][]{xgcm,Dawson_2016a,Dawson_2016b}, but has also been used in physics \citep[e.g.][]{pycalphad}, time series analytics \citep{cesium}, and finance.
-\textbf{xarray} is developed and supported by a team of volunteers. The primary avenue for user support is \textit{StackOverflow} \citep{stackoverflow}, with the ``xarray-python'' tag.
+\textbf{xarray} is developed and supported by a team of volunteers.
+The primary avenue for user support is \textit{StackOverflow} \citep{stackoverflow}, with the ``xarray-python'' tag.
 Additionally, we use GitHub for a bug tracker (\url{https://github.com/pydata/xarray/issues}) and maintain the ``xarray-dev'' mailing list on Google Groups (\url{https://groups.google.com/forum/#!forum/xarray}).
 
 \section*{Acknowledgements}
