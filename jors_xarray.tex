@@ -108,13 +108,13 @@ Standardized conventions, such as the Climate and Forecast (CF) Conventions \cit
 \section*{Implementation and architecture}
 
 NetCDF forms the basis of the \textbf{xarray} data model and provides a natural and portable serialization format.
-Building on netCDF, \textbf{xarray} features two main data structures: the \verb|DataArray| and the \verb|Dataset|.
+Building on netCDF, \textbf{xarray} features two main data structures: the \verb|DataArray| and the \verb|Dataset|. The API for these data structures is summarized in Figure \ref{fig:xarray-public-api}.
 
 \begin{figure}
 	\centering
-	\includegraphics[width=0.8\textwidth]{dataset-diagram_original}
-	\caption{An example of how a dataset (netCDF or \textbf{xarray}) for a weather forecast might be structured. This dataset has three dimensions, time, y, and x, each of which is also a one-dimensional coordinate. \textit{Temperature} and \textit{precipitation} are three-dimensional data variables.  Also included in the dataset are two-dimensional coordinates \textit{latitude} and \textit{longitude}, having dimensions y and x, and \textit{reference time}, a zero-dimensional (scalar) coordinate.}
-	\label{fig:dataset_diagram}
+	\includegraphics[width=\textwidth]{xarray-public-api}
+	\caption{An overview of \textbf{xarray}'s main data structures and their public API. Types are annotated using Python 3 style type hints \cite{pep484}.}
+	\label{fig:xarray-public-api}
 \end{figure}
 
 \textbf{DataArray}
@@ -148,9 +148,16 @@ In addition to the dict-like interface of the dataset itself, which can be used 
 	\item \verb|attrs|: \verb|OrderedDict| to hold arbitrary metadata pertaining to the dataset
 \end{itemize}
 
-\verb|DataArray|s can share any number of common dimensions common, but they are presumed to share a common coordinate system.
+\verb|DataArray|s inside a \verb|Dataset| may have any number of dimensions but are presumed to share a common coordinate system.
 Coordinates can also have any number of dimensions but denote constant/independent quantities, unlike the varying/dependent quantities that belong in data.
 Figure \ref{fig:dataset_diagram} illustrates these concepts for an example \verb|Dataset| containing meteorological data.
+
+\begin{figure}
+	\centering
+	\includegraphics[width=0.8\textwidth]{dataset-diagram_original}
+	\caption{An example of how a dataset (netCDF or \textbf{xarray}) for a weather forecast might be structured. This dataset has three dimensions, time, y, and x, each of which is also a one-dimensional coordinate. \textit{Temperature} and \textit{precipitation} are three-dimensional data variables.  Also included in the dataset are two-dimensional coordinates \textit{latitude} and \textit{longitude}, having dimensions y and x, and \textit{reference time}, a zero-dimensional (scalar) coordinate.}
+	\label{fig:dataset_diagram}
+\end{figure}
 
 \textbf{Core xarray Features}
 
