@@ -39,7 +39,7 @@ xarray: N-D labeled arrays and datasets in Python
  2. Hamman, Joseph J.}
 
 \section*{Paper Author Roles and Affiliations}
-{1. The Climate Corporation, San Francisco, CA, USA and Google Research, Mountain View, CA, USA. Present address: Google Research. 2. Department of Civil \& Environmental Engineering, University of Washington, Seattle, WA, USA.}
+{1. Google Research, Mountain View, CA, USA. Former affiliation: The Climate Corporation, San Francisco, CA, USA. 2. Hydrometeorological Applications Program, Research Applications Laboratory, National Center for Atmospheric Research, Boulder, Colorado, USA. Former affiliation: Department of Civil \& Environmental Engineering, University of Washington, Seattle, WA, USA.}
 
 \section*{Abstract}
 
@@ -108,7 +108,8 @@ Standardized conventions, such as the Climate and Forecast (CF) Conventions \cit
 \section*{Implementation and architecture}
 
 NetCDF forms the basis of the \textbf{xarray} data model and provides a natural and portable serialization format.
-Building on netCDF, \textbf{xarray} features two main data structures: the \verb|DataArray| and the \verb|Dataset|. The API for these data structures is summarized in Figure \ref{fig:xarray-public-api}.
+Building on netCDF, \textbf{xarray} features two main data structures: the \verb|DataArray| and the \verb|Dataset|.
+The API for these data structures is summarized in the following sections and in Figure \ref{fig:xarray-public-api}.
 
 \begin{figure}
 	\centering
@@ -119,13 +120,15 @@ Building on netCDF, \textbf{xarray} features two main data structures: the \verb
 
 \textbf{DataArray}
 
-The \verb|DataArray| is \textbf{xarray's} implementation of a labeled, multi-dimensional array. It has several key properties:
+The \verb|DataArray| is \textbf{xarray}'s implementation of a labeled, multi-dimensional array. It has several key properties:
 
 \begin{itemize}
 	\item \verb|data|: N-dimensional array (NumPy or dask) holding the array's values,
+	\item \verb|name|: The name of the array,
+	\item \verb|coords|: dict-like container of arrays (coordinates) that label each point (e.g., 1-dimensional arrays of numbers, \verb|datetime| objects or strings),
 	\item \verb|dims|: dimension names for each axis [e.g., \verb|(`time', `latitude', `longitude')|],
-	\item \verb|coords|: dict-like container of arrays (coordinates) that label each point (e.g., 1-dimensional arrays of numbers, \verb|datetime| objects or strings), and
-	\item \verb|attrs|: \verb|OrderedDict| holding arbitrary metadata (e.g. units or descriptions)
+	\item \verb|attrs|: \verb|OrderedDict| holding arbitrary metadata (e.g. units or descriptions), and
+	\item \verb|indexes|: \verb|OrderedDict| of \verb|Pandas.Index| objects used for label based indexing.
 \end{itemize}
 
 \textbf{xarray} uses \verb|dims| and \verb|coords| to enable its core metadata-aware operations.
@@ -137,15 +140,17 @@ In contrast, \textbf{xarray} does interpret and persist coordinates in operation
 
 \textbf{Dataset}
 
-The \verb|Dataset| is \textbf{xarray's} multi-dimensional equivalent of a \verb|DataFrame|. It is a dict-like container of labeled arrays (\verb|DataArray|s) with aligned dimensions.
+The \verb|Dataset| is \textbf{xarray}'s multi-dimensional equivalent of a \verb|DataFrame|.
+It is a dict-like container of labeled arrays (\verb|DataArray|s) with aligned dimensions.
 It is designed as an in-memory representation of a netCDF dataset.
-In addition to the dict-like interface of the dataset itself, which can be used to access any \verb|DataArray| in a \verb|Dataset|, datasets have four key properties:
+In addition to the dict-like interface of the dataset itself, which can be used to access any \verb|DataArray| in a \verb|Dataset|, datasets have five key properties:
 
 \begin{itemize}
-	\item \verb|dims|: dictionary mapping from dimension names to the fixed length of each dimension (e.g., \verb|{`x': 6, `y': 6, `time': 8}|)
-	\item \verb|data_vars|: dict-like container of \verb|DataArray|s corresponding to data variables
-	\item \verb|coords|: dict-like container of \verb|DataArray|s intended to label points used in \verb|data_vars| (e.g., 1-dimensional arrays of numbers, \verb|datetime| objects or strings)
-	\item \verb|attrs|: \verb|OrderedDict| to hold arbitrary metadata pertaining to the dataset
+	\item \verb|data_vars|:\verb|OrderedDict| of \verb|DataArray|s corresponding to data variables,
+	\item \verb|coords|:\verb|OrderedDict| of \verb|DataArray|s intended to label points used in \verb|data_vars| (e.g., 1-dimensional arrays of numbers, \verb|datetime| objects or strings),
+	\item \verb|dims|: dictionary mapping from dimension names to the fixed length of each dimension (e.g., \verb|{`x': 6, `y': 6, `time': 8}|),
+	\item \verb|attrs|: \verb|OrderedDict| to hold arbitrary metadata pertaining to the dataset, and
+	\item \verb|indexes|: \verb|OrderedDict| of \verb|Pandas.Index| objects used for label based indexing.
 \end{itemize}
 
 \verb|DataArray|s inside a \verb|Dataset| may have any number of dimensions but are presumed to share a common coordinate system.
@@ -184,7 +189,7 @@ The xarray documentation \citep{xarray_docs} includes a complete description of 
 
 \section*{Quality control}
 
-\textbf{xarray} is provided with a large test suite comprised of over 950 unit tests.
+\textbf{xarray} is provided with a large test suite comprised of over 1,500 unit tests.
 These tests cover the core \textbf{xarray} functionality as well as features facilitated by optional dependencies.
 The unit tests are executed automatically on the TravisCI (Linux) \citep{TravisCI} and Appveyor (Windows) \citep{Appveyor} continuous integration systems.
 A selection of sample data is also distributed with the source code, allowing users to reproduce any examples in the \textbf{xarray} documentation.
@@ -197,7 +202,7 @@ Linux, Windows and Mac OS X.
 
 \section*{Programming language}
 
-Python, versions 2.7, 3.3 and later.
+Python, versions 2.7, 3.4 and later.
 
 \section*{Additional system requirements}
 
@@ -277,11 +282,11 @@ speed.
 
 \begin{description}[noitemsep,topsep=0pt]
 	\item[Name:] Zenodo
-	\item[Persistent identifier:] \url{http://dx.doi.org/10.5281/zenodo.60508}
+	\item[Persistent identifier:] \url{https://doi.org/10.5281/zenodo.260072}
 	\item[Licence:] Apache, v2.0
 	\item[Publisher:]  Zenodo
-	\item[Version published:] 0.8.2
-	\item[Date published:] August 19, 2016
+	\item[Version published:] 0.9.0
+	\item[Date published:] January 26, 2017
 \end{description}
 
 {\bf Code repository}
@@ -290,7 +295,7 @@ speed.
 	\item[Name:] GitHub
 	\item[Identifier:] \url{http://github.com/pydata/xarray}
 	\item[Licence:] Apache, v2.0
-	\item[Date published:] August 19, 2016
+	\item[Date published:] January 26, 2017
 \end{description}
 
 \section*{Language}
