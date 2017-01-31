@@ -114,7 +114,7 @@ The API for these data structures is summarized in the following sections and in
 \begin{figure}
 	\centering
 	\includegraphics[width=\textwidth]{xarray-public-api}
-	\caption{An overview of \textbf{xarray}'s main data structures and their public API. Types are annotated using Python 3 style type hints \cite{pep484}.}
+	\caption{An overview of \textbf{xarray}'s main data structures. Types are annotated using Python 3 style type hints \cite{pep484}. ``Mapping of'' denotes an ordered mapping with values of the given type.}
 	\label{fig:xarray-public-api}
 \end{figure}
 
@@ -124,10 +124,10 @@ The \verb|DataArray| is \textbf{xarray}'s implementation of a labeled, multi-dim
 
 \begin{itemize}
 	\item \verb|data|: N-dimensional array (NumPy or dask) holding the array's values,
-	\item \verb|name|: The name of the array,
 	\item \verb|coords|: dict-like container of arrays (coordinates) that label each point (e.g., 1-dimensional arrays of numbers, \verb|datetime| objects or strings),
-	\item \verb|dims|: dimension names for each axis [e.g., \verb|(`time', `latitude', `longitude')|], and
-	\item \verb|attrs|: \verb|OrderedDict| holding arbitrary metadata (e.g. units or descriptions).
+	\item \verb|dims|: dimension names for each axis [e.g., \verb|(`time', `latitude', `longitude')|],
+	\item \verb|attrs|: \verb|OrderedDict| holding arbitrary metadata (e.g. units or descriptions), and
+	\item \verb|name|: an arbitrary name for the array.
 \end{itemize}
 
 \textbf{xarray} uses \verb|dims| and \verb|coords| to enable its core metadata-aware operations.
@@ -142,11 +142,11 @@ In contrast, \textbf{xarray} does interpret and persist coordinates in operation
 The \verb|Dataset| is \textbf{xarray}'s multi-dimensional equivalent of a \verb|DataFrame|.
 It is a dict-like container of labeled arrays (\verb|DataArray|s) with aligned dimensions.
 It is designed as an in-memory representation of a netCDF dataset.
-In addition to the dict-like interface of the dataset itself, which can be used to access any \verb|DataArray| in a \verb|Dataset|, datasets have five key properties:
+In addition to the dict-like interface of the dataset itself, which can be used to access any \verb|DataArray| in a \verb|Dataset|, datasets have four key properties:
 
 \begin{itemize}
-	\item \verb|data_vars|:\verb|OrderedDict| of \verb|DataArray|s corresponding to data variables,
-	\item \verb|coords|:\verb|OrderedDict| of \verb|DataArray|s intended to label points used in \verb|data_vars| (e.g., 1-dimensional arrays of numbers, \verb|datetime| objects or strings),
+	\item \verb|data_vars|: \verb|OrderedDict| of \verb|DataArray|s corresponding to data variables,
+	\item \verb|coords|: \verb|OrderedDict| of \verb|DataArray|s intended to label points used in \verb|data_vars| (e.g., 1-dimensional arrays of numbers, \verb|datetime| objects or strings),
 	\item \verb|dims|: dictionary mapping from dimension names to the fixed length of each dimension (e.g., \verb|{`x': 6, `y': 6, `time': 8}|), and
 	\item \verb|attrs|: \verb|OrderedDict| to hold arbitrary metadata pertaining to the dataset.
 \end{itemize}
